@@ -9,7 +9,8 @@ import Question from "./Question";
 const initialState = {
   questions: [],
   status: "loading", // 'loading', 'ready': questions loaded, 'active': quizz started, 'error', 'completed'
-  index: 0
+  index: 0,
+  answer: null
 };
 
 function reducer(state, action) {
@@ -30,13 +31,18 @@ function reducer(state, action) {
         ...state,
         status: "active",
       };
+    case 'newAnswer':
+      return {
+        ...state,
+        answer: action.payload
+      }
     default:
       return state;
   }
 }
 
 export default function App() {
-  const [{ questions, index, status }, dispatch] = useReducer(reducer, initialState);
+  const [{ questions, index, answer, status }, dispatch] = useReducer(reducer, initialState);
   const numQuestions = questions.length;
 
   useEffect(() => {
@@ -61,7 +67,7 @@ export default function App() {
         {status === "ready" && (
           <StartScreen numQuestions={numQuestions} dispatch={dispatch} />
         )}
-        {status === "active" && <Question question={questions[index]} />}
+        {status === "active" && <Question question={questions[index]} dispatch={dispatch} answer={answer} />}
       </Main>
     </div>
   );
