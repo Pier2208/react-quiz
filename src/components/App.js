@@ -15,7 +15,7 @@ const initialState = {
   index: 0,
   answer: null,
   points: 0,
-  highscore: 0
+  highscore: 0,
 };
 
 function reducer(state, action) {
@@ -56,7 +56,14 @@ function reducer(state, action) {
       return {
         ...state,
         status: "completed",
-        highscore: state.points > state.highscore ? state.points : state.highscore
+        highscore:
+          state.points > state.highscore ? state.points : state.highscore,
+      };
+    case "newQuiz":
+      return {
+        ...initialState,
+        questions: state.questions,
+        status: "ready",
       };
     default:
       return state;
@@ -64,10 +71,8 @@ function reducer(state, action) {
 }
 
 export default function App() {
-  const [{ questions, index, answer, status, points, highscore }, dispatch] = useReducer(
-    reducer,
-    initialState
-  );
+  const [{ questions, index, answer, status, points, highscore }, dispatch] =
+    useReducer(reducer, initialState);
 
   const numQuestions = questions.length;
   const maxPossiblePoints = questions.reduce(
@@ -125,6 +130,7 @@ export default function App() {
             points={points}
             maxPossiblePoints={maxPossiblePoints}
             highscore={highscore}
+            dispatch={dispatch}
           />
         )}
       </Main>
